@@ -1,0 +1,22 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Datasets (too large for git, download via scripts/download_dataset.py)
+dataset/
+*.zip
+
+# Trained weights (large binaries — publish via GitHub Releases instead)
+*.pt
+!yolo11n.pt.placeholder
+runs/
+
+# OS/editor cruft
+.DS_Store
+.vscode/
+*.log
+
+# Environment secrets
+.env

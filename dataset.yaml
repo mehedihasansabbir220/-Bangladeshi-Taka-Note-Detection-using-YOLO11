@@ -1,0 +1,19 @@
+# This file is a template. Running scripts/download_dataset.py will generate
+# the real data.yaml inside ./dataset/ once the Roboflow dataset is pulled —
+# point --data at that generated file when training (see README).
+
+path: ./dataset
+train: train/images
+val: val/images
+test: test/images
+
+names:
+  0: two_taka
+  1: five_taka
+  2: ten_taka
+  3: twenty_taka
+  4: fifty_taka
+  5: one_hundred_taka
+  6: two_hundred_taka
+  7: five_hundred_taka
+  8: one_thousand_taka
