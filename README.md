@@ -61,7 +61,8 @@ bangladeshi-taka-detection-yolo11/
 │   └── export.py           # Export best.pt to ONNX/TFLite/NCNN
 ├── scripts/
 │   ├── download_dataset.py # Roboflow dataset downloader
-│   └── prepare_dataset.py  # Cleans classes + builds leak-free train/valid/test split
+│   ├── prepare_dataset.py  # Cleans classes + builds leak-free train/valid/test split
+│   └── overfit_check.py    # Pipeline sanity check — can it memorise 50 images?
 ├── docs/
 │   └── RESULTS.md          # Evaluation results log (fill in after training)
 ├── assets/
@@ -160,11 +161,33 @@ Resulting split (70/15/15 by photo, seed 42):
 
 ---
 
+## ✅ Sanity-Check the Pipeline First
+
+Before committing to a long run, prove the plumbing works by training on ~50 images and evaluating on those *same* images. This is the one case where training on your validation set is correct — the goal isn't generalisation, it's confirming the model **can** fit its data.
+
+```bash
+python3 scripts/overfit_check.py     # ~10 min on CPU
+```
+
+Verified on this dataset: **mAP50 0.989** (60 epochs, 640px, yolo11n). Read a failure by how far it falls:
+
+| Score | Meaning |
+|---|---|
+| > 0.90 | Pass — start the real run |
+| 0.70 – 0.89 | Under-fit, not broken. Raise `--epochs` / `--imgsz` and re-run |
+| < 0.30 | Structurally broken — bad label format, pixel coords, `nc` mismatch |
+
+The same check scored only 0.81 at 30 epochs / 320px — identical data and code, just under-trained. A near-miss here is a budget problem, not a data problem.
+
+---
+
 ## 🚀 Train
 
 ```bash
 python3 src/train.py --data dataset/prepared/data.yaml --model yolo11s.pt --epochs 100
 ```
+
+> Ultralytics prepends its global `runs_dir` setting to a relative `--project`, so output lands in `runs/detect/<project>/<name>/` rather than where you might expect. Pass an absolute `--project` if you want exact control.
 
 Key flags:
 | Flag | Default | Description |
@@ -229,6 +252,7 @@ See [`docs/RESULTS.md`](docs/RESULTS.md) for the current evaluation log. This se
 ## 🗺️ Roadmap
 
 - [x] Build a leak-free train/valid/test split and clean up duplicate classes
+- [x] Verify the training pipeline can overfit a 50-image subset (mAP50 0.989)
 - [ ] Train baseline `yolo11s` model and log results
 - [ ] Expand dataset with additional real-world photos (varied lighting/angle)
 - [ ] Address class imbalance on ৳500 (fewest boxes) and ৳1000
