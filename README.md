@@ -4,7 +4,14 @@ A computer vision project that detects and classifies Bangladeshi Taka banknotes
 
 ![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
 ![YOLO11](https://img.shields.io/badge/YOLO11-Ultralytics-purple)
+![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)
+![Docker](https://img.shields.io/badge/Container-Docker-2496ED)
 ![License](https://img.shields.io/badge/License-MIT-green)
+
+This repository covers the project end to end in two phases:
+
+- **Phase 1 — Model training** (this README): reproducible YOLO11 training pipeline, from raw dataset to trained weights.
+- **Phase 2 — Deployment** ([`deployment/`](deployment/)): the trained model served as a **REST API**, containerised with **Docker**, and deployable to the cloud. See [deployment/README.md](deployment/README.md).
 
 ---
 
@@ -240,6 +247,32 @@ python3 src/export.py --weights best.pt --format onnx
 ```
 
 Supported formats: `onnx`, `tflite`, `ncnn`, `torchscript`.
+
+---
+
+## 🌐 REST API & Docker (Phase 2)
+
+The trained model is served as a REST API and containerised with Docker in the [`deployment/`](deployment/) folder. Full instructions live in [deployment/README.md](deployment/README.md); the short version:
+
+```bash
+cd deployment
+
+# Run the API locally
+pip install -r requirements.txt
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+# …or in Docker
+docker build -t taka-detection-api .
+docker run --rm -p 8000:8000 taka-detection-api
+
+# Detect notes in an image
+curl -X POST http://localhost:8000/predict \
+     -F "file=@tests/sample_images/sample1_1000taka.jpg"
+```
+
+The `/predict` endpoint returns detected denominations, confidence scores, and bounding boxes as JSON. For cloud deployment (Google Cloud Run), see [deployment/docs/CLOUD_DEPLOY.md](deployment/docs/CLOUD_DEPLOY.md).
+
+📄 **Submission document** : [Google Doc](https://docs.google.com/document/d/1kfvsVqmb-ulCVlUbhSdb1FnytmFpb-RZzZ2OGnZX1Dc/edit?usp=sharing)
 
 ---
 

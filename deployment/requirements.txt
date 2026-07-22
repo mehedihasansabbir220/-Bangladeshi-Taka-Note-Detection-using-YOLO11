@@ -1,0 +1,14 @@
+# Web framework + ASGI server for the REST API.
+fastapi>=0.115,<0.116
+uvicorn[standard]>=0.32,<0.35
+python-multipart>=0.0.9
+
+# Model + inference stack. Versions match the tested training/inference env.
+ultralytics>=8.4.103,<8.5
+torch>=2.6,<2.14
+torchvision>=0.21,<0.29
+pillow>=11,<13
+numpy>=2,<3
+
+# Client library used by tests/test_api.py.
+requests>=2.31

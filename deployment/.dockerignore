@@ -1,0 +1,18 @@
+# Keep the build context (and image) small.
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+
+# Test artifacts and demo outputs — not needed inside the image.
+outputs/
+tests/
+docs/
+
+# Local editor / OS cruft.
+.DS_Store
+.vscode/
+.idea/
+*.log

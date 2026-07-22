@@ -11,6 +11,9 @@ dataset/
 # Trained weights (large binaries — publish via GitHub Releases instead)
 *.pt
 !yolo11n.pt.placeholder
+# Exception: the Phase-2 deployment ships its serving weights in-repo, as the
+# assignment requires the model weights to be included with the submission.
+!deployment/models/best.pt
 runs/
 
 # OS/editor cruft
